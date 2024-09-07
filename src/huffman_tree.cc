@@ -31,25 +31,28 @@ void HuffmanTree::serialize_tree(Node *root, std::ofstream &file) {
   serialize_tree(root->Right, file);
 }
 
-Node *HuffmanTree::deserialize_tree(std::istream &file) {
+Node *HuffmanTree::deserialize_tree(std::istream &buffer) {
   char flag;
-  if (!(file >> flag)) {
+  if (!buffer.get(flag)) {
     return nullptr;
   }
 
-  if (flag == 'L') {
-    // Leaf node
-    char ch;
-    file >> ch;
-    return new Node(ch, 0);  // Frequency is not needed for decoding
-  } else if (flag == 'I') {
-    // Internal node
-    Node *left = deserialize_tree(file);
-    Node *right = deserialize_tree(file);
-    return new Node('\0', 0, left, right);  // Internal node with no character
-  }
+  if (flag == 'I') {
+    Node *left = deserialize_tree(buffer);
+    Node *right = deserialize_tree(buffer);
 
-  return nullptr;
+    return new Node('\0', 0, left, right);
+  } else if (flag == 'L') {
+    char ch;
+    if (!buffer.get(ch)) {
+      return nullptr;
+    }
+    return new Node(ch, 0);
+  } else {
+    std::string error_msg("cannot read flag: ");
+    error_msg += flag;
+    throw std::invalid_argument(error_msg);
+  }
 }
 
 Node *HuffmanTree::build_huffman_tree(

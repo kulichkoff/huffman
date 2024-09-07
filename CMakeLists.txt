@@ -14,4 +14,4 @@ set(CMAKE_CXX_FLAGS "-Os -s")
 include_directories(include)
 
 # Source files
-add_executable(huffman src/main.cc src/node.cc src/node_comparator.cc src/huffman_tree.cc)
+add_executable(huffman src/main.cc src/node.cc src/node_comparator.cc src/huffman_tree.cc src/binary.cc)
